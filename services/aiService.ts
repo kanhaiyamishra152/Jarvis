@@ -1,4 +1,5 @@
 
+
 import {
   GoogleGenAI,
   Part,
@@ -9,16 +10,22 @@ import {
 import { type FileData, type Message, type ChatSession } from '../types';
 
 let genAI: GoogleGenAI;
+let initError: Error | null = null;
 
 try {
-  if (!process.env.API_KEY) {
-    throw new Error('API_KEY environment variable not set');
+  // This code runs in a browser environment. Vercel's build process is expected
+  // to replace `process.env.API_KEY` with the value from Environment Variables.
+  // If `process` is not defined or the API_KEY is missing, it will result in an error.
+  const apiKey = (typeof process !== 'undefined' && process.env ? process.env.API_KEY : undefined);
+  if (!apiKey) {
+    throw new Error('API_KEY is missing. Please configure it in your Vercel deployment settings.');
   }
-  genAI = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  genAI = new GoogleGenAI({ apiKey });
 } catch (error) {
   console.error('Failed to initialize AI client:', error);
-  // The UI will handle showing a user-friendly message.
+  initError = error instanceof Error ? error : new Error('An unknown error occurred during AI client initialization.');
 }
+
 
 const getSystemInstruction = (isDeepResearch: boolean = false) => {
     const now = new Date();
@@ -81,10 +88,13 @@ You are expected to produce a detailed and insightful report, not just a simple 
     return instruction;
 };
 
+const checkInitialization = () => {
+    if (initError) throw initError;
+    if (!genAI) throw new Error('AI Service is not available. Initialization failed without a specific error.');
+};
+
 export const generateDetailedImagePrompt = async (simplePrompt: string): Promise<string> => {
-    if (!genAI) {
-        throw new Error('AI Service is not available.');
-    }
+    checkInitialization();
     try {
         const response = await genAI.models.generateContent({
             model: 'gemini-2.5-flash',
@@ -124,9 +134,7 @@ This is your most important rule. Before finalizing any prompt, you **MUST** per
 
 
 export const generateEmailDraft = async (userInput: string): Promise<{ recipient: string; subject: string; body: string; }> => {
-  if (!genAI) {
-    throw new Error('AI Service is not available.');
-  }
+  checkInitialization();
   try {
     const response = await genAI.models.generateContent({
       model: 'gemini-2.5-flash',
@@ -161,9 +169,7 @@ export const generateEmailDraft = async (userInput: string): Promise<{ recipient
 };
 
 export const generateImage = async (prompt: string): Promise<string> => {
-    if (!genAI) {
-        throw new Error('AI Service is not available.');
-    }
+    checkInitialization();
     try {
         const response = await genAI.models.generateImages({
             model: 'imagen-3.0-generate-002',
@@ -196,9 +202,7 @@ export const generateResponseStream = async (
   filesData: FileData[],
   options?: { deepResearch?: boolean }
 ): Promise<AsyncIterable<GenerateContentResponse>> => {
-  if (!genAI) {
-    throw new Error('AI Service is not available.');
-  }
+  checkInitialization();
 
   const activeChat = allChats.find(chat => chat.id === activeChatId);
   const history = activeChat ? activeChat.messages : [];

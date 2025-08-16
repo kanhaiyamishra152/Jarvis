@@ -417,13 +417,21 @@ const App: React.FC = () => {
       updateMessage(assistantMessageId, m => ({ ...m, isStreaming: false, groundingMetadata: metadata }));
       
     } catch (error) {
-      console.error(error);
-      let errorMessageText = 'My apologies, I am unable to connect to my core systems. Please try again later.';
-      if (error instanceof Error && error.message.includes('AI Service is not available')) {
-        errorMessageText = 'AI Service connection failed. This may be due to a missing API key in the deployment configuration. Please verify your setup.';
-      }
-      updateMessage(assistantMessageId, m => ({ ...m, text: errorMessageText, isStreaming: false }));
-      setCurrentError(errorMessageText);
+        console.error("AI Service Error:", error);
+        let errorMessageText = 'My apologies, I am unable to connect to my core systems. Please try again later.';
+        
+        if (error instanceof Error) {
+            if (error.message.includes('API_KEY is missing')) {
+                errorMessageText = 'AI Service Error: The API Key is missing. Please add it to your Vercel Environment Variables (Name: API_KEY) and redeploy the project.';
+            } else if (error.message.toLowerCase().includes('api key not valid')) {
+                errorMessageText = 'AI Service Error: The provided API Key is invalid. Please check the key in your Vercel Environment Variables.';
+            } else {
+                errorMessageText = `An unexpected error occurred: ${error.message}`;
+            }
+        }
+        
+        updateMessage(assistantMessageId, m => ({ ...m, text: errorMessageText, isStreaming: false }));
+        setCurrentError(errorMessageText);
     } finally {
         setAiState('idle');
         setIsDeepResearchMode(false);
