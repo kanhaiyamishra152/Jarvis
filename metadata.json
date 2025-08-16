@@ -1,0 +1,7 @@
+{
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "name": "Jarvis AI Voice Assistant",
+  "description": "I Smart AI assistant that can do everything that you say"
+}
