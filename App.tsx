@@ -418,7 +418,10 @@ const App: React.FC = () => {
       
     } catch (error) {
       console.error(error);
-      const errorMessageText = 'My apologies, I am unable to connect to my core systems. Please try again later.';
+      let errorMessageText = 'My apologies, I am unable to connect to my core systems. Please try again later.';
+      if (error instanceof Error && error.message.includes('AI Service is not available')) {
+        errorMessageText = 'AI Service connection failed. This may be due to a missing API key in the deployment configuration. Please verify your setup.';
+      }
       updateMessage(assistantMessageId, m => ({ ...m, text: errorMessageText, isStreaming: false }));
       setCurrentError(errorMessageText);
     } finally {
