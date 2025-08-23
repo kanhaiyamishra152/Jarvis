@@ -1,6 +1,7 @@
 
+
 import React from 'react';
-import { type AIState } from '../types';
+import { type AIState } from '../types.ts';
 
 interface HolographicFaceProps {
   state: AIState;

@@ -2,7 +2,7 @@
 export type MessageMode = 'image_gen' | 'deep_research_gen';
 
 export interface ImageGenerationData {
-  status: 'confirming_prompt' | 'generating' | 'done' | 'error';
+  status: 'enhancing_prompt' | 'confirming_prompt' | 'generating' | 'done' | 'error';
   prompt: string; // The prompt to be used for generation
   originalPrompt: string; // The user's initial prompt
   images: { url: string; prompt: string }[]; // History of generated images

@@ -1,9 +1,10 @@
 
+
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import { type Message, type MessageMode } from '../types';
-import CodeBlock from './CodeBlock';
-import ImageGenerationDisplay from './ImageGenerationDisplay';
-import { UserIcon, AssistantIcon, SystemIcon, CopyIcon, CheckIcon, SourceIcon, SpeakerWaveIcon, PencilIcon, PaperClipIcon } from './Icons';
+import { type Message, type MessageMode } from '../types.ts';
+import CodeBlock from './CodeBlock.tsx';
+import ImageGenerationDisplay from './ImageGenerationDisplay.tsx';
+import { UserIcon, AssistantIcon, SystemIcon, CopyIcon, CheckIcon, SourceIcon, SpeakerWaveIcon, PencilIcon, PaperClipIcon } from './Icons.tsx';
 
 // KaTeX is loaded from a CDN in index.html. We will check for its existence on the window object before using it.
 

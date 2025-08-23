@@ -1,5 +1,4 @@
 
-
 import {
   GoogleGenAI,
   Part,
@@ -7,7 +6,7 @@ import {
   GenerateContentResponse,
   Type,
 } from '@google/genai';
-import { type FileData, type Message, type ChatSession } from '../types';
+import { type FileData, type Message, type ChatSession } from '../types.ts';
 
 let genAI: GoogleGenAI;
 let initError: Error | null = null;
@@ -125,10 +124,17 @@ This is your most important rule. Before finalizing any prompt, you **MUST** per
 - **DO NOT** include any pre-amble, explanations, or conversational text. Your response is only the prompt itself.`,
             }
         });
-        return response.text.trim();
+        const detailedPrompt = response.text?.trim();
+        if (!detailedPrompt) {
+            console.warn("Detailed prompt generation resulted in an empty response. Falling back to the original prompt.");
+            return simplePrompt;
+        }
+        return detailedPrompt;
     } catch (error) {
         console.error("Error in generateDetailedImagePrompt:", error);
-        throw new Error("I had some trouble brainstorming a detailed prompt. Please try again.");
+        // Also fall back to the original prompt if the API call itself fails.
+        console.warn("Falling back to original prompt due to an API error.");
+        return simplePrompt;
     }
 };
 

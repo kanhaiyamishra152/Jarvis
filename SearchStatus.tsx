@@ -1,7 +1,8 @@
 
+
 import React from 'react';
-import { type SearchState } from '../types';
-import { SearchWebIcon } from './Icons';
+import { type SearchState } from '../types.ts';
+import { SearchWebIcon } from './Icons.tsx';
 
 interface SearchStatusProps {
     state: SearchState;

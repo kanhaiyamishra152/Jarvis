@@ -1,8 +1,9 @@
 
+
 import React from 'react';
 import JSZip from 'jszip';
-import { type ImageGenerationData } from '../types';
-import { DownloadIcon, RefreshIcon, CheckIcon, CloseIcon } from './Icons';
+import { type ImageGenerationData } from '../types.ts';
+import { DownloadIcon, RefreshIcon, CheckIcon, CloseIcon } from './Icons.tsx';
 
 // Helper function to trigger file downloads
 const downloadFile = (blob: Blob, filename: string) => {
@@ -43,6 +44,14 @@ const ImageGenerationDisplay: React.FC<ImageGenerationDisplayProps> = ({ data, o
 
     const renderStatusContent = () => {
         switch (status) {
+            case 'enhancing_prompt':
+                return (
+                    <div className="flex flex-col items-center justify-center p-8 bg-gray-800/30 rounded-lg aspect-square">
+                        <RefreshIcon className="w-12 h-12 text-cyan-400 animate-spin" />
+                        <p className="mt-4 text-lg font-semibold text-gray-300">Enhancing prompt...</p>
+                        <p className="text-sm text-gray-400 mt-1">Please wait while I refine the details.</p>
+                    </div>
+                );
             case 'confirming_prompt':
                 return (
                     <div className="p-4 bg-gray-800/30 rounded-lg">

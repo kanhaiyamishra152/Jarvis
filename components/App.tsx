@@ -1,15 +1,13 @@
-
-
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { type Message, type AIState, type FileData, type ChatSession, type ImageGenerationData, type MessageMode } from './types';
-import { useSpeech } from './hooks/useSpeech';
-import ChatInterface from './components/ChatInterface';
-import HolographicFace from './components/HolographicFace';
-import InputBar from './components/InputBar';
-import HistoryPanel from './components/HistoryPanel';
-import { generateResponseStream, generateEmailDraft, generateImage, generateDetailedImagePrompt } from './services/aiService';
+import { type Message, type AIState, type FileData, type ChatSession, type ImageGenerationData, type MessageMode } from '../types.ts';
+import { useSpeech } from '../hooks/useSpeech.ts';
+import ChatInterface from './ChatInterface.tsx';
+import HolographicFace from './HolographicFace.tsx';
+import InputBar from './InputBar.tsx';
+import HistoryPanel from './HistoryPanel.tsx';
+import { generateResponseStream, generateEmailDraft, generateImage, generateDetailedImagePrompt } from '../services/aiService.ts';
 import { type GenerateContentResponse } from '@google/genai';
-import { HistoryIcon, ImageIcon, SearchWebIcon, PaperClipIcon } from './components/Icons';
+import { HistoryIcon, ImageIcon, SearchWebIcon, PaperClipIcon } from './Icons.tsx';
 
 const App: React.FC = () => {
   const [allChats, setAllChats] = useState<ChatSession[]>([]);
@@ -248,9 +246,9 @@ const App: React.FC = () => {
         setAiState('thinking');
         const assistantMessageId = (Date.now() + 1).toString();
         const initialImageGenData: ImageGenerationData = {
-            status: 'confirming_prompt',
+            status: 'enhancing_prompt',
             originalPrompt: prompt,
-            prompt: '', // To be filled by the detailed prompt
+            prompt: '',
             images: [],
         };
         
@@ -268,7 +266,11 @@ const App: React.FC = () => {
             updateMessage(assistantMessageId, msg => ({
                 ...msg,
                 text: "Here is a suggested prompt. Shall I proceed?",
-                imageGenData: { ...msg.imageGenData!, prompt: detailedPrompt },
+                imageGenData: {
+                    ...msg.imageGenData!,
+                    prompt: detailedPrompt,
+                    status: 'confirming_prompt',
+                },
             }));
 
         } catch (error) {

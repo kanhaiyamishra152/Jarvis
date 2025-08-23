@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { SendIcon, MicIcon, MicOffIcon, PaperClipIcon, CloseIcon, PlusIcon } from './Icons';
-import { type FileData } from '../types';
+import { SendIcon, MicIcon, MicOffIcon, PaperClipIcon, CloseIcon, PlusIcon } from './Icons.tsx';
+import { type FileData } from '../types.ts';
 
 interface InputBarProps {
   onSendMessage: (text: string) => void;
